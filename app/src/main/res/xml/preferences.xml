@@ -4,16 +4,20 @@
 
     <PreferenceCategory android:title="@string/settings_title">
         <ListPreference
-            android:key="runnable_interval"
-            android:title="@string/settings_runnable_interval"
+            android:key="@string/settings_key_runnable_interval"
+            android:title="@string/settings_label_runnable_interval"
             android:summary="%s"
             android:entries="@array/interval_names"
             android:entryValues="@array/interval_values"
-            android:defaultValue="3600000" />
+            android:defaultValue="@string/settings_default_runnable_interval" />
 
         <CheckBoxPreference
-            android:key="launch_maps"
-            android:title="@string/settings_launch_maps"
+            android:key="@string/settings_key_wifi_only"
+            android:title="@string/settings_label_wifi_only" />
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_launch_maps"
+            android:title="@string/settings_label_launch_maps"
             android:defaultValue="true" />
     </PreferenceCategory>
 

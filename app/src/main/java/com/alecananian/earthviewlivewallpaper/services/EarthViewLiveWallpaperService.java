@@ -1,6 +1,7 @@
 package com.alecananian.earthviewlivewallpaper.services;
 
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -8,13 +9,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.service.wallpaper.WallpaperService;
 import android.view.SurfaceHolder;
-import android.util.Log;
 
 import com.alecananian.earthviewlivewallpaper.R;
 import com.alecananian.earthviewlivewallpaper.asynctasks.SetWallpaperTask;
@@ -57,10 +59,19 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
         }
 
         private void fetchNewWallpaper() {
-            Log.i("LiveWallpaperEngine", "Fetching new wallpaper");
+            boolean shouldFetchWallpaper = true;
+            if (wallpaper != null && preferences.getBoolean(getString(R.string.settings_key_wifi_only), false)) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                shouldFetchWallpaper = (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected());
+            }
 
-            int wallpaperId = wallpaperIds[new Random().nextInt(wallpaperIds.length)];
-            new SetWallpaperTask(this).execute(Integer.toString(wallpaperId));
+            if (shouldFetchWallpaper) {
+                int wallpaperId = wallpaperIds[new Random().nextInt(wallpaperIds.length)];
+                new SetWallpaperTask(this).execute(Integer.toString(wallpaperId));
+            } else {
+                startRunnable();
+            }
         }
 
         private void draw() {
@@ -98,7 +109,7 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
 
         private void startRunnable() {
             cancelRunnable();
-            handler.postDelayed(runnableCallback, Integer.parseInt(preferences.getString("runnable_interval", "3600000")));
+            handler.postDelayed(runnableCallback, Integer.parseInt(preferences.getString(getString(R.string.settings_key_runnable_interval), getString(R.string.settings_default_runnable_interval))));
         }
 
         private void cancelRunnable() {
@@ -137,7 +148,7 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
         public Bundle onCommand(String action, int x, int y, int z, Bundle extras, boolean resultRequested) {
             if (action.equals(WallpaperManager.COMMAND_TAP)) {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                boolean doubleTapEnabled = preferences.getBoolean("launch_maps", false);
+                boolean doubleTapEnabled = preferences.getBoolean(getString(R.string.settings_key_launch_maps), false);
                 if (doubleTapEnabled) {
                     if (lastWallpaperTapTimestamp != 0 && System.currentTimeMillis() - lastWallpaperTapTimestamp <= 500) {
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wallpaper.getMapIntentUri()));
@@ -155,7 +166,7 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("runnable_interval")) {
+            if (key.equals(getString(R.string.settings_key_runnable_interval))) {
                 cancelRunnable();
                 fetchNewWallpaper();
             }

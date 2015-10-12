@@ -4,8 +4,16 @@
     <string name="service_name">Earth View</string>
 
     <string name="settings_title">Preferences</string>
-    <string name="settings_runnable_interval">Wallpaper Update Interval</string>
-    <string name="settings_launch_maps">Double-tap for map</string>
+
+    <string name="settings_key_runnable_interval">runnable_interval</string>
+    <string name="settings_key_wifi_only">wifi_only</string>
+    <string name="settings_key_launch_maps">launch_maps</string>
+
+    <string name="settings_label_runnable_interval">Wallpaper Update Interval</string>
+    <string name="settings_label_wifi_only">Update over Wi-Fi only</string>
+    <string name="settings_label_launch_maps">Double-tap for map</string>
+
+    <string name="settings_default_runnable_interval">3600000</string>
 
     <string name="time_60000">1 minute</string>
     <string name="time_300000">5 minutes</string>

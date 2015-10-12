@@ -1,7 +1,6 @@
 package com.alecananian.earthviewlivewallpaper.asynctasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.alecananian.earthviewlivewallpaper.interfaces.SetWallpaperTaskInterface;
 import com.alecananian.earthviewlivewallpaper.models.Wallpaper;
@@ -28,7 +27,6 @@ public class SetWallpaperTask extends AsyncTask<String, Void, JSONObject> {
         try {
             URL requestUrl = new URL("https://www.gstatic.com/prettyearth/" + params[0] + ".json");
 
-            Log.i("SetWallpaperTask", "Requesting URL: " + requestUrl);
             HttpsURLConnection urlConnection = (HttpsURLConnection)requestUrl.openConnection();
             InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
 
@@ -46,10 +44,7 @@ public class SetWallpaperTask extends AsyncTask<String, Void, JSONObject> {
         super.onPostExecute(result);
 
         if (result != null) {
-            Log.i("SetWallpaperTask", "Finished with result: " + result.toString());
             this.listener.onSetWallpaperTaskComplete(new Wallpaper(result));
-        } else {
-            Log.i("SetWallpaperTask", "Finished with result: null");
         }
     }
 
