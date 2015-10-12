@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Earth View Live Wallpaper</string>
+    <string name="service_name">Earth View</string>
+
+    <string name="settings_title">Preferences</string>
+    <string name="settings_runnable_interval">Wallpaper Update Interval</string>
+    <string name="settings_launch_maps">Double-tap for map</string>
+
+    <string name="time_60000">1 minute</string>
+    <string name="time_300000">5 minutes</string>
+    <string name="time_600000">10 minutes</string>
+    <string name="time_900000">15 minutes</string>
+    <string name="time_1800000">30 minutes</string>
+    <string name="time_3600000">1 hour</string>
+    <string name="time_18000000">5 hours</string>
+    <string name="time_43200000">12 hours</string>
+    <string name="time_86400000">24 hours</string>
+</resources>
