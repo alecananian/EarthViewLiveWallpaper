@@ -84,9 +84,20 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
                         byte[] wallpaperImageAsBytes = wallpaper.getImageAsBytes();
                         fullWallpaperImage = BitmapFactory.decodeByteArray(wallpaperImageAsBytes, 0, wallpaperImageAsBytes.length);
 
-                        double imageWidth = fullWallpaperImage.getWidth();
-                        double imageHeight = fullWallpaperImage.getHeight();
-                        resizedWallpaperImage = Bitmap.createScaledBitmap(fullWallpaperImage, (int) Math.round(canvas.getHeight() * (imageWidth / imageHeight)), canvas.getHeight(), false);
+                        int canvasWidth = canvas.getWidth();
+                        int canvasHeight = canvas.getHeight();
+                        double imageAspectRatio = fullWallpaperImage.getWidth() / (double)fullWallpaperImage.getHeight();
+                        int newWidth;
+                        int newHeight;
+                        if (canvasWidth < canvasHeight) {
+                            newWidth = (int) Math.round(canvasHeight * imageAspectRatio);
+                            newHeight = canvasHeight;
+                        } else {
+                            newWidth = canvasWidth;
+                            newHeight = (int) Math.round(canvasWidth / imageAspectRatio);
+                        }
+
+                        resizedWallpaperImage = Bitmap.createScaledBitmap(fullWallpaperImage, newWidth, newHeight, false);
 
                         fullWallpaperImage.recycle();
                         fullWallpaperImage = null;
