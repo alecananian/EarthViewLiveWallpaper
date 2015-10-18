@@ -44,6 +44,7 @@ public class WallpaperPreferenceActivity extends Activity {
             if (wallpaperBundle != null) {
                 final Wallpaper wallpaper = wallpaperBundle.getParcelable("wallpaper");
                 if (wallpaper != null) {
+                    // Set address and listener for launch maps button
                     Preference launchMapsPreference = findPreference(getString(R.string.settings_key_launch_maps));
                     launchMapsPreference.setSummary(wallpaper.getLocationString());
                     launchMapsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -54,6 +55,7 @@ public class WallpaperPreferenceActivity extends Activity {
                         }
                     });
 
+                    // Set listener for fetch new wallpaper button
                     Preference fetchWallpaperPreference = findPreference(getString(R.string.settings_key_fetch_new));
                     fetchWallpaperPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                         @Override
@@ -63,7 +65,11 @@ public class WallpaperPreferenceActivity extends Activity {
                             return true;
                         }
                     });
+
+                    // Set attribution
+                    findPreference(getString(R.string.settings_key_attribution)).setTitle(wallpaper.attribution);
                 } else {
+                    // Hide the current wallpaper section
                     getPreferenceScreen().removePreference(findPreference(getString(R.string.settings_key_current_wallpaper)));
                 }
             }

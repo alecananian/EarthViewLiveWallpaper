@@ -20,6 +20,8 @@ public class Wallpaper implements Parcelable {
     private String adminArea2;
     private String country;
 
+    public String attribution;
+
     @Override
     public int describeContents() {
         return hashCode();
@@ -33,6 +35,7 @@ public class Wallpaper implements Parcelable {
         p.writeString(adminArea1);
         p.writeString(adminArea2);
         p.writeString(country);
+        p.writeString(attribution);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -52,6 +55,7 @@ public class Wallpaper implements Parcelable {
         adminArea1 = p.readString();
         adminArea2 = p.readString();
         country = p.readString();
+        attribution = p.readString();
     }
 
     public Wallpaper(JSONObject wallpaperData) {
@@ -76,6 +80,8 @@ public class Wallpaper implements Parcelable {
             if (!geocode.isNull("country")) {
                 country = geocode.getString("country");
             }
+
+            attribution = wallpaperData.getString("attribution");
         } catch (JSONException e) {
             e.printStackTrace();
         }

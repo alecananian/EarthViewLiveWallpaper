@@ -22,13 +22,20 @@
         android:visibility="gone">
 
         <Preference
+            android:key="@string/settings_key_fetch_new"
+            android:title="@string/settings_label_fetch_new"
+            android:persistent="false"/>
+
+        <Preference
             android:key="@string/settings_key_launch_maps"
             android:title="@string/settings_label_launch_maps"
             android:persistent="false" />
 
         <Preference
-            android:key="@string/settings_key_fetch_new"
-            android:title="@string/settings_label_fetch_new" />
+            android:key="@string/settings_key_attribution"
+            android:persistent="false"
+            android:selectable="false"
+            android:enabled="false" />
 
     </PreferenceCategory>
 

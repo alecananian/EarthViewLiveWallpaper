@@ -8,8 +8,9 @@
     <string name="settings_key_runnable_interval">runnable_interval</string>
     <string name="settings_key_wifi_only">wifi_only</string>
     <string name="settings_key_current_wallpaper">current_wallpaper</string>
-    <string name="settings_key_launch_maps">launch_maps</string>
     <string name="settings_key_fetch_new">fetch_new</string>
+    <string name="settings_key_launch_maps">launch_maps</string>
+    <string name="settings_key_attribution">attribution</string>
 
     <string name="settings_label_runnable_interval">Wallpaper Update Interval</string>
     <string name="settings_label_wifi_only">Update over Wi-Fi only</string>
