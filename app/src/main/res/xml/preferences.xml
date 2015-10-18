@@ -14,11 +14,22 @@
         <CheckBoxPreference
             android:key="@string/settings_key_wifi_only"
             android:title="@string/settings_label_wifi_only" />
+    </PreferenceCategory>
 
-        <CheckBoxPreference
+    <PreferenceCategory
+        android:key="@string/settings_key_current_wallpaper"
+        android:title="@string/settings_label_current_wallpaper"
+        android:visibility="gone">
+
+        <Preference
             android:key="@string/settings_key_launch_maps"
             android:title="@string/settings_label_launch_maps"
-            android:defaultValue="true" />
+            android:persistent="false" />
+
+        <Preference
+            android:key="@string/settings_key_fetch_new"
+            android:title="@string/settings_label_fetch_new" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

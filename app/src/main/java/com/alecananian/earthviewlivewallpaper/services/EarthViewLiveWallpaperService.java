@@ -19,11 +19,16 @@ import android.service.wallpaper.WallpaperService;
 import android.view.SurfaceHolder;
 
 import com.alecananian.earthviewlivewallpaper.R;
+import com.alecananian.earthviewlivewallpaper.activities.WallpaperPreferenceActivity;
 import com.alecananian.earthviewlivewallpaper.asynctasks.SetWallpaperTask;
+import com.alecananian.earthviewlivewallpaper.events.WallpaperEvent;
+import com.alecananian.earthviewlivewallpaper.events.WallpaperEventType;
 import com.alecananian.earthviewlivewallpaper.interfaces.SetWallpaperTaskInterface;
 import com.alecananian.earthviewlivewallpaper.models.Wallpaper;
 
 import java.util.Random;
+
+import de.greenrobot.event.EventBus;
 
 public class EarthViewLiveWallpaperService extends WallpaperService {
 
@@ -32,7 +37,7 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
         return new EarthViewLiveWallpaperEngine();
     }
 
-    private class EarthViewLiveWallpaperEngine extends Engine implements SetWallpaperTaskInterface, SharedPreferences.OnSharedPreferenceChangeListener {
+    public class EarthViewLiveWallpaperEngine extends Engine implements SetWallpaperTaskInterface, SharedPreferences.OnSharedPreferenceChangeListener {
         private final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         private final Handler handler = new Handler();
         private final Runnable runnableCallback = new Runnable() {
@@ -43,9 +48,10 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
         };
 
         private final Paint paint = new Paint();
+        private boolean isVisible;
 
-        private final int[] wallpaperIds = getResources().getIntArray(R.array.wallpaper_ids);
         private Wallpaper wallpaper;
+        private final int[] wallpaperIds = getResources().getIntArray(R.array.wallpaper_ids);
         private Bitmap fullWallpaperImage;
         private Bitmap resizedWallpaperImage;
         private long lastWallpaperTapTimestamp = 0;
@@ -90,11 +96,11 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
                         int newWidth;
                         int newHeight;
                         if (canvasWidth < canvasHeight) {
-                            newWidth = (int) Math.round(canvasHeight * imageAspectRatio);
                             newHeight = canvasHeight;
+                            newWidth = (int) Math.round(newHeight * imageAspectRatio);
                         } else {
                             newWidth = canvasWidth;
-                            newHeight = (int) Math.round(canvasWidth / imageAspectRatio);
+                            newHeight = (int) Math.round(newWidth / imageAspectRatio);
                         }
 
                         resizedWallpaperImage = Bitmap.createScaledBitmap(fullWallpaperImage, newWidth, newHeight, false);
@@ -132,16 +138,20 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
             super.onCreate(holder);
 
             paint.setColor(Color.BLACK);
-            preferences.registerOnSharedPreferenceChangeListener(this);
             fetchNewWallpaper();
+
+            preferences.registerOnSharedPreferenceChangeListener(this);
+            EventBus.getDefault().register(this);
         }
 
         @Override
         public void onDestroy() {
             super.onDestroy();
 
-            preferences.unregisterOnSharedPreferenceChangeListener(this);
             cancelRunnable();
+
+            preferences.unregisterOnSharedPreferenceChangeListener(this);
+            EventBus.getDefault().unregister(this);
         }
 
         @Override
@@ -156,23 +166,39 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
         }
 
         @Override
-        public Bundle onCommand(String action, int x, int y, int z, Bundle extras, boolean resultRequested) {
-            if (action.equals(WallpaperManager.COMMAND_TAP)) {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                boolean doubleTapEnabled = preferences.getBoolean(getString(R.string.settings_key_launch_maps), false);
-                if (doubleTapEnabled) {
-                    if (lastWallpaperTapTimestamp != 0 && System.currentTimeMillis() - lastWallpaperTapTimestamp <= 500) {
-                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wallpaper.getMapIntentUri()));
-                        mapIntent.setPackage("com.google.android.apps.maps");
-                        mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mapIntent);
-                    }
+        public void onVisibilityChanged(boolean visible) {
+            isVisible = visible;
+        }
 
-                    lastWallpaperTapTimestamp = System.currentTimeMillis();
+        @Override
+        public Bundle onCommand(String action, int x, int y, int z, Bundle extras, boolean resultRequested) {
+            if (action.equals(WallpaperManager.COMMAND_TAP) && isVisible) {
+                if (lastWallpaperTapTimestamp != 0 && System.currentTimeMillis() - lastWallpaperTapTimestamp <= 500) {
+                    Intent settingsIntent = new Intent(getApplicationContext(), WallpaperPreferenceActivity.class);
+                    settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    settingsIntent.putExtra("wallpaper", wallpaper);
+                    startActivity(settingsIntent);
                 }
+
+                lastWallpaperTapTimestamp = System.currentTimeMillis();
             }
 
             return super.onCommand(action, x, y, z, extras, resultRequested);
+        }
+
+        public void onEvent(WallpaperEvent event) {
+            switch (event.eventType) {
+                case LAUNCH_MAPS:
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wallpaper.getMapIntentUri()));
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(mapIntent);
+                    break;
+
+                case FETCH_NEW:
+                    fetchNewWallpaper();
+                    break;
+            }
         }
 
         @Override

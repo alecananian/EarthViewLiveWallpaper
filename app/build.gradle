@@ -26,4 +26,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:7.3.0'
     compile 'com.google.android.gms:play-services-location:7.3.0'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile 'de.greenrobot:eventbus:2.4.0'
 }
