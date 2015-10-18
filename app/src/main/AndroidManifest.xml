@@ -29,8 +29,8 @@
         <activity
             android:label="Settings"
             android:name=".activities.WallpaperPreferenceActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"
+            android:excludeFromRecents="true" />
 
     </application>
 
