@@ -22,7 +22,6 @@ import com.alecananian.earthviewlivewallpaper.R;
 import com.alecananian.earthviewlivewallpaper.activities.WallpaperPreferenceActivity;
 import com.alecananian.earthviewlivewallpaper.asynctasks.SetWallpaperTask;
 import com.alecananian.earthviewlivewallpaper.events.WallpaperEvent;
-import com.alecananian.earthviewlivewallpaper.events.WallpaperEventType;
 import com.alecananian.earthviewlivewallpaper.interfaces.SetWallpaperTaskInterface;
 import com.alecananian.earthviewlivewallpaper.models.Wallpaper;
 

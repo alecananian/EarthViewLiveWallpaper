@@ -2,12 +2,15 @@ package com.alecananian.earthviewlivewallpaper.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class Wallpaper implements Parcelable {
 
@@ -98,24 +101,23 @@ public class Wallpaper implements Parcelable {
     }
 
     public String getLocationString() {
-        String location = "";
-
+        ArrayList<String> locationParts = new ArrayList<>(4);
         if (locality != null) {
-            location += locality;
+            locationParts.add(locality);
         }
 
         if (adminArea1 != null) {
-            location += (location.length() > 0 ? " " : "") + adminArea1;
+            locationParts.add(adminArea1);
         }
 
         if (adminArea2 != null) {
-            location += (location.length() > 0 ? ", " : "") + adminArea2;
+            locationParts.add(adminArea2);
         }
 
         if (country != null) {
-            location += ", " + country;
+            locationParts.add(country);
         }
 
-        return location;
+        return TextUtils.join(", ", locationParts);
     }
 }
