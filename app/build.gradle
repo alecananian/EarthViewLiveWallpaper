@@ -21,10 +21,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.google.android.gms:play-services-base:7.3.0'
-    compile 'com.google.android.gms:play-services-location:7.3.0'
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.google.android.gms:play-services-base:8.1.0'
+    compile 'com.google.android.gms:play-services-location:8.1.0'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
     compile 'de.greenrobot:eventbus:2.4.0'
 }
