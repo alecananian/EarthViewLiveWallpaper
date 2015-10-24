@@ -106,12 +106,12 @@ public class Wallpaper implements Parcelable {
             locationParts.add(locality);
         }
 
-        if (adminArea1 != null) {
-            locationParts.add(adminArea1);
-        }
-
         if (adminArea2 != null) {
             locationParts.add(adminArea2);
+        }
+
+        if (adminArea1 != null) {
+            locationParts.add(adminArea1);
         }
 
         if (country != null) {
