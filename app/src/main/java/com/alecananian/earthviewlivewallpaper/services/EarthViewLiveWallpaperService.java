@@ -35,8 +35,18 @@ import com.alecananian.earthviewlivewallpaper.events.WallpaperEvent;
 import com.alecananian.earthviewlivewallpaper.interfaces.SetWallpaperTaskInterface;
 import com.alecananian.earthviewlivewallpaper.models.Wallpaper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Random;
 
 import de.greenrobot.event.EventBus;
@@ -84,6 +94,36 @@ public class EarthViewLiveWallpaperService extends WallpaperService {
         }
 
         public void onSetWallpaperTaskError() {
+            InputStream inputStream = getResources().openRawResource(R.raw.sample);
+            Writer writer = new StringWriter();
+            char[] buffer = new char[1024];
+            try {
+                Reader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String sampleJSON = writer.toString();
+            if (sampleJSON != null) {
+                try {
+                    onSetWallpaperTaskComplete(new Wallpaper(new JSONObject(sampleJSON)));
+
+                    return;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             isFetchingWallpaper = false;
         }
 
