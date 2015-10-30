@@ -34,6 +34,8 @@ public class SetWallpaperTask extends AsyncTask<String, Void, JSONObject> {
             return new JSONObject(response);
         } catch (Exception e) {
             e.printStackTrace();
+
+            this.listener.onSetWallpaperTaskError();
         }
 
         return null;

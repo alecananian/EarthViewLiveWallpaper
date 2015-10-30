@@ -100,6 +100,14 @@ public class Wallpaper implements Parcelable {
                 "?z=" + Integer.toString(zoomLevel);
     }
 
+    public double getLatitude() {
+        return geoPoint.latitude;
+    }
+
+    public double getLongitude() {
+        return geoPoint.longitude;
+    }
+
     public String getLocationString() {
         ArrayList<String> locationParts = new ArrayList<>(4);
         if (locality != null) {

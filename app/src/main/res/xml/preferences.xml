@@ -33,6 +33,11 @@
             android:title="@string/settings_label_launch_maps"
             android:persistent="false" />
 
+        <Preference
+            android:key="@string/settings_key_download"
+            android:title="@string/settings_label_download"
+            android:persistent="false" />
+
         <com.alecananian.earthviewlivewallpaper.preferences.MultiLinePreference
             android:key="@string/settings_key_attribution"
             android:persistent="false"
